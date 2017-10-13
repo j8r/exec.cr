@@ -1,0 +1,10 @@
+name: exec
+version: 0.1.0
+
+authors:
+  - Julien Reichardt <mi@jrei.ch>
+
+description: |
+  Simple library to execute a program with arguments from Crystal
+
+license: ISC
