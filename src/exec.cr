@@ -15,7 +15,7 @@ class Exec
   end
 
   def out
-    @run.success? ? @output.to_s : @error.to_s
+    @run.normal_exit? ? @output.to_s : @error.to_s
   end
 
   # from https://crystal-lang.org/api/latest/Process/Status.html
