@@ -1,4 +1,4 @@
-class Exec
+struct Exec
   def initialize(cmd : String, all_args : String | Array(String)? = nil, dir : String? = nil) : Process::Status
     all_args = all_args.split(" ").to_a if all_args.is_a? String
     @output = IO::Memory.new
