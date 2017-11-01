@@ -1,17 +1,17 @@
 struct Exec
+  getter run : Process::Status
   def initialize(cmd : String, all_args : String | Array(String)? = nil, dir : String? = nil) : Process::Status
     all_args = all_args.split(" ").to_a if all_args.is_a? String
     @output = IO::Memory.new
     @error = IO::Memory.new
-    @run = Process.run(command = cmd,
-                       args = all_args,
-                       env = nil,
-                       clear_env = false,
-                       shell = false,
-                       input = false,
-                       output = @output,
-                       error = @error,
-                       chdir = dir)
+    @run = Process.run(command: cmd,
+                       args: all_args,
+                       env: nil,
+                       clear_env: false,
+                       shell: false,
+                       output: @output,
+                       error: @error,
+                       chdir: dir)
   end
 
   def out
@@ -19,6 +19,7 @@ struct Exec
   end
 
   # from https://crystal-lang.org/api/latest/Process/Status.html
+
   def exit_code
     @run.exit_code
   end
