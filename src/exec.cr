@@ -15,11 +15,16 @@ struct Exec
   end
 
   def out
-    @run.normal_exit? ? @output.to_s : @error.to_s
+    @output.empty? ? @error.to_s : @output.to_s
+  end
+  def output
+    @output.to_s
+  end
+  def error
+    @error.to_s
   end
 
   # from https://crystal-lang.org/api/latest/Process/Status.html
-
   def exit_code
     @run.exit_code
   end
