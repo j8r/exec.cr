@@ -2,21 +2,25 @@ struct Exec
   getter run : Process::Status
 
   def initialize(cmd : String, all_args : String | Array(String)? = nil, dir : String? = nil) : Process::Status
-    all_args = all_args.split(" ").to_a if all_args.is_a? String
+    all_args = all_args.split(' ').to_a if all_args.is_a? String
     @output = IO::Memory.new
     @error = IO::Memory.new
-    @run = Process.run(command: cmd,
+    @run = Process.run command: cmd,
       args: all_args,
       env: nil,
       clear_env: false,
       shell: false,
       output: @output,
       error: @error,
-      chdir: dir)
+      chdir: dir
   end
 
-  def out
-    @output.empty? ? @error.to_s : @output.to_s
+  def out(strict = true)
+    if @error.empty?
+      @output
+    else
+      strict ? raise @error.to_s : @error
+    end.to_s
   end
 
   def output
