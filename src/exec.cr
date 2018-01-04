@@ -16,7 +16,7 @@ struct Exec
   end
 
   def out(strict = true)
-    if @error.empty?
+    if success?
       @output
     else
       strict ? raise @error.to_s : @error

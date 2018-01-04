@@ -16,9 +16,7 @@ dependencies:
 
 ### Methods
 
-`out`: return the output (stdout) of the process as a `String` if exited normally with an exit code of 0, else return the error (stderr)
-
-`output_only`: only return the output (stdout), else raise an error with the "error" (stderr) field
+`out(strict = false)`: return the output (stdout) of the process as a `String` if exited normally with an exit code of 0, else return the error (stderr) or raise the error when `strict = true`
 
 `exit_code`, `exit_signal`, `exit_status`, `normal_exit?`, `signal_exit?`, `success?`: same as the ones in the [official Crystal API docs](https://crystal-lang.org/api/latest/Process/Status.html)
 
