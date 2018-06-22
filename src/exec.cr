@@ -1,12 +1,16 @@
 struct Exec
   getter run : Process::Status
+  forward_missing_to @run
 
-  def initialize(cmd : String, all_args : String | Array(String)? = nil, dir : String? = nil) : Process::Status
-    all_args = all_args.split(' ').to_a if all_args.is_a? String
+  def initialize(cmd : String, arg : String, dir : String? = nil) : Process::Status
+    initialize cmd, arg.split(' '), dir
+  end
+
+  def initialize(cmd : String, args : Array(String)? = nil, dir : String? = nil) : Process::Status
     @output = IO::Memory.new
     @error = IO::Memory.new
     @run = Process.run command: cmd,
-      args: all_args,
+      args: args,
       env: nil,
       clear_env: false,
       shell: false,
@@ -15,7 +19,7 @@ struct Exec
       chdir: dir
   end
 
-  def out(strict = true)
+  def out(strict = true) : String
     if success?
       @output
     else
@@ -23,36 +27,11 @@ struct Exec
     end.to_s
   end
 
-  def output
+  def output : String
     @output.to_s
   end
 
-  def error
+  def error : String
     @error.to_s
-  end
-
-  # from https://crystal-lang.org/api/latest/Process/Status.html
-  def exit_code
-    @run.exit_code
-  end
-
-  def exit_signal
-    @run.exit_signal
-  end
-
-  def exit_status
-    @run.exit_status
-  end
-
-  def normal_exit?
-    @run.normal_exit?
-  end
-
-  def signal_exit?
-    @run.signal_exit?
-  end
-
-  def success?
-    @run.success?
   end
 end
