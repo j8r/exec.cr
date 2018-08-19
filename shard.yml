@@ -1,9 +1,9 @@
 name: exec
-version: 0.3.2
+version: 0.3.3
 
 authors:
   - Julien Reichardt <mi@jrei.ch>
 
-description: Simple library to execute a program with arguments from Crystal
+description: Thin Process wrapper for simple execution of programs with arguments
 
 license: ISC

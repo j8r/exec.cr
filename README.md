@@ -1,6 +1,6 @@
-# exec
+# Exec
 
-Simple library to execute a program with arguments from Crystal
+Thin Process wrapper for simple execution of programs with arguments
 
 ## Installation
 
@@ -16,9 +16,13 @@ dependencies:
 
 ### Methods
 
-`out(strict = false)`: return the output (stdout) of the process as a `String` if exited normally with an exit code of 0, else return the error (stderr) or raise the error when `strict = true`
+`#out(strict = false) : String`: Return the output (stdout) of the process as a `String` if exited normally with an exit code of 0, else return the error (stderr) or raise the error when `strict = true`
 
-`exit_code`, `exit_signal`, `exit_status`, `normal_exit?`, `signal_exit?`, `success?`: same as the ones in the [official Crystal API docs](https://crystal-lang.org/api/latest/Process/Status.html)
+`#output : String`: Return the stdout
+
+`#error : String`: Return the stderr
+
+Other methods are available, forwarded from [Process::Status](https://crystal-lang.org/api/latest/Process/Status.html)
 
 ### Examples
 
@@ -27,9 +31,9 @@ Exec.new("/bin/true").success? # true
 
 Exec.new("/bin/ls", ["/tmp", "-lh"]).exit_status # 0
 
-Exec.new("/bin/pwd", "", "/tmp").out # "/tmp\n"
+Exec.new("/bin/pwd", args: "", dir: "/tmp").out # "/tmp\n"
 ```
 
 ## License
 
-Copyright (c) 2017 Julien Reichardt - ISC License
+Copyright (c) 2017 - 2018 Julien Reichardt - ISC License

@@ -1,18 +1,18 @@
 struct Exec
-  getter run : Process::Status
-  forward_missing_to @run
+  @process : Process::Status
+  forward_missing_to @process
 
-  def initialize(cmd : String, arg : String, dir : String? = nil) : Process::Status
-    initialize cmd, arg.split(' '), dir
+  def initialize(cmd : String, args : String, env : Process::Env = nil, dir : String? = nil) : Process::Status
+    initialize cmd, args.split(' '), env, dir
   end
 
-  def initialize(cmd : String, args : Array(String)? = nil, dir : String? = nil) : Process::Status
+  def initialize(cmd : String, args : Array(String)? = nil, env : Process::Env = nil, dir : String? = nil) : Process::Status
     @output = IO::Memory.new
     @error = IO::Memory.new
-    @run = Process.run command: cmd,
+    @process = Process.run command: cmd,
       args: args,
-      env: nil,
-      clear_env: false,
+      env: env,
+      clear_env: true,
       shell: false,
       output: @output,
       error: @error,

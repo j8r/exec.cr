@@ -12,7 +12,7 @@ describe Exec do
       Exec.new("/bin/ls", ["/tmp", "-lh"]).exit_status.should eq 0
     end
     it "arguments using Array of Strings, check the output String" do
-      Exec.new("/bin/pwd", "", "/tmp").out.should eq "/tmp\n"
+      Exec.new("/bin/pwd", args: "", dir: "/tmp").out.should eq "/tmp\n"
     end
   end
 end
