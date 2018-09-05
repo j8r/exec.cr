@@ -4,12 +4,12 @@ Thin Process wrapper for simple execution of programs with arguments
 
 ## Installation
 
-Add this block to your application's `shard.yml`:
+Add the dependency to your `shard.yml`:
 
 ```yaml
 dependencies:
   exec:
-    github: j8r/exec
+    github: j8r/exec.cr
 ```
 
 ## Usage
@@ -29,7 +29,10 @@ Other methods are available, forwarded from [Process::Status](https://crystal-la
 ```crystal
 Exec.new("/bin/true").success? # true
 
-Exec.new("/bin/ls", ["/tmp", "-lh"]).exit_status # 0
+# Different syntaxes are supported for arguments
+Exec.new("/bin/ls /tmp -l").exit_status # 0
+Exec.new("/bin/ls", "/tmp -l"])
+Exec.new("/bin/ls", ["/tmp", "-l"])
 
 Exec.new("/bin/pwd", args: "", dir: "/tmp").out # "/tmp\n"
 ```
