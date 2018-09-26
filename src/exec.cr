@@ -4,13 +4,13 @@ struct Exec
   @output = IO::Memory.new
   @error = IO::Memory.new
 
-  def initialize(cmd : String, env : Process::Env = nil, dir : String? = nil, path = ENV["PATH"]?) : Process::Status
+  def self.new(cmd : String, env : Process::Env = nil, dir : String? = nil, path = ENV["PATH"]?) : Exec
     args = cmd.split(' ', limit: 2)
-    initialize args[0], args[1]?.to_s, env, dir, path
+    new args[0], args[1]?.to_s, env, dir, path
   end
 
-  def initialize(cmd : String, args : String, env : Process::Env = nil, dir : String? = nil, path = ENV["PATH"]?) : Process::Status
-    initialize(if cmd.starts_with? '/'
+  def self.new(cmd : String, args : String, env : Process::Env = nil, dir : String? = nil, path = ENV["PATH"]?) : Exec
+    new(if cmd.starts_with? '/'
       cmd
     else
       Process.find_executable(cmd, path, dir) || raise "command not found in PATH `#{path}`: " + cmd

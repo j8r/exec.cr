@@ -28,17 +28,26 @@ Other methods are available, forwarded from [Process::Status](https://crystal-la
 
 ```crystal
 Exec.new("/bin/true").success? # true
+```
+Most efficient syntax
 
-# Shell-like syntax
-Exec.new("ls /tmp -l").exit_status # 0
-# Most efficient syntax
+```crystal
+Exec.new("/bin/true", nil).success? # true
 Exec.new("/bin/ls", ["/tmp", "-l"]).exit_status # 0
-# Other supported syntaxes
+```
+
+Shell-like syntax. No shell interpreter sub-process is invocated.
+```crystal
+Exec.new("ls /tmp -l").exit_status # 0
+```
+
+Other syntaxes are also supported
+```crystal
 Exec.new("/bin/ls /tmp -l")
 Exec.new("/bin/ls", "/tmp -l")
 Exec.new("ls", "/tmp -l")
 
-Exec.new("/bin/pwd", args: "", dir: "/tmp").out # "/tmp\n"
+Exec.new("/bin/pwd", args: nil, dir: "/tmp").out # "/tmp\n"
 ```
 
 ## License

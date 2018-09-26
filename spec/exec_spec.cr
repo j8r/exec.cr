@@ -6,7 +6,7 @@ describe Exec do
       Exec.new("/bin/true").success?.should be_true
     end
     it "false" do
-      Exec.new("/bin/false").exit_code.should eq 1
+      Exec.new("/bin/false", nil).exit_code.should eq 1
     end
     it "using a shell-like syntax" do
       Exec.new("ls /tmp -l").exit_status.should eq 0
@@ -26,7 +26,7 @@ describe Exec do
         Exec.new("/bin/ls", ["/tmp", "-l"]).exit_status.should eq 0
       end
       it "with a directory" do
-        Exec.new("/bin/pwd", dir: "/tmp").out.should eq "/tmp\n"
+        Exec.new("/bin/pwd", args: nil, dir: "/tmp").out.should eq "/tmp\n"
       end
     end
   end
