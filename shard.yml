@@ -1,9 +1,9 @@
 name: exec
-version: 0.3.6
+version: 0.4.0
 
 authors:
   - Julien Reichardt <mi@jrei.ch>
 
-description: Thin Process wrapper for simple execution of programs with arguments
+description: Basic Shell-like, async by default, command execution with no shell interpreter invocation
 
 license: ISC

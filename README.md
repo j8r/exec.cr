@@ -1,6 +1,6 @@
 # Exec
 
-Thin Process wrapper for simple execution of programs with arguments
+Basic Shell-like, async by default, command execution with no shell interpreter invocation.
 
 ## Installation
 
@@ -12,44 +12,30 @@ dependencies:
     github: j8r/exec.cr
 ```
 
-## Usage
+## Usage examples
 
-### Methods
+Adding `.wait` ([API reference](https://crystal-lang.org/api/master/Process.html#wait%3AProcess%3A%3AStatus-instance-method)) allow to have sync execution.
 
-`#out(strict = false) : String`: Return the output (stdout) of the process as a `String` if exited normally with an exit code of 0, else return the error (stderr) or raise the error when `strict = true`
-
-`#output : String`: Return the stdout
-
-`#error : String`: Return the stderr
-
-Other methods are available, forwarded from [Process::Status](https://crystal-lang.org/api/latest/Process/Status.html)
-
-### Examples
+Shell-like syntax. The command and its arguments are merged in a single `String`.
 
 ```crystal
-Exec.new("/bin/true").success? # true
-```
-Most efficient syntax
-
-```crystal
-Exec.new("/bin/true", nil).success? # true
-Exec.new("/bin/ls", ["/tmp", "-l"]).exit_status # 0
+output, error = Exec.run "echo hello", { |process| puts process.wait.success? } #=> true
+puts output.to_s #=> hello
 ```
 
-Shell-like syntax. No shell interpreter sub-process is invocated.
+Most efficient syntax: command as `String` and arguments as `Array(String)`
+
 ```crystal
-Exec.new("ls /tmp -l").exit_status # 0
+Exec.new "/bin/true", &.wait
+Exec.new("/bin/ls", ["/tmp", "-l"]) {}
 ```
 
-Other syntaxes are also supported
-```crystal
-Exec.new("/bin/ls /tmp -l")
-Exec.new("/bin/ls", "/tmp -l")
-Exec.new("ls", "/tmp -l")
+Arguments can also be a separated `String`. This is bit more efficient than being merged in a single string with the command.
 
-Exec.new("/bin/pwd", args: nil, dir: "/tmp").out # "/tmp\n"
+```crystal
+Exec.run("/bin/ls", "/tmp -l")
 ```
 
 ## License
 
-Copyright (c) 2017 - 2018 Julien Reichardt - ISC License
+Copyright (c) 2017-2019 Julien Reichardt - ISC License

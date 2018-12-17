@@ -1,46 +1,34 @@
-struct Exec
-  @process : Process::Status
-  forward_missing_to @process
-  @output = IO::Memory.new
-  @error = IO::Memory.new
-
-  def self.new(cmd : String, env : Process::Env = nil, dir : String? = nil, path = ENV["PATH"]?) : Exec
+module Exec
+  # Yields a `Process::Status` and returns a Tuple with the stdout and stderr.
+  def self.run(cmd : String, **process_args, &block : Process -> _) : Tuple
     args = cmd.split(' ', limit: 2)
-    new args[0], args[1]?.to_s, env, dir, path
+    run(**process_args.merge(cmd: args[0], args: args[1]?.to_s)) { |process| yield process }
   end
 
-  def self.new(cmd : String, args : String, env : Process::Env = nil, dir : String? = nil, path = ENV["PATH"]?) : Exec
-    new(if cmd.starts_with? '/'
-      cmd
-    else
-      Process.find_executable(cmd, path, dir) || raise "command not found in PATH `#{path}`: " + cmd
-    end, args.split(' '), env, dir)
+  # :ditto:
+  def self.run(cmd : String, args : String, chdir : String? = nil, env : Process::Env? = nil, **process_args, &block : Process -> _) : Tuple
+    command = if cmd.starts_with? '/'
+                cmd
+              else
+                path = env ? env["PATH"]? : ENV["PATH"]?
+                Process.find_executable(cmd, path, chdir) || raise "command not found in PATH `#{path}`: " + cmd
+              end
+
+    new(**process_args.merge(command: command, args: args.split(' '), chdir: chdir)) { |process| yield process }
   end
 
-  def initialize(cmd : String, args : Array(String)? = nil, env : Process::Env = nil, dir : String? = nil) : Process::Status
-    @process = Process.run command: cmd,
-      args: args,
-      env: env,
-      clear_env: true,
-      shell: false,
-      output: @output,
-      error: @error,
-      chdir: dir
-  end
-
-  def out(strict = true) : String
-    if success?
-      @output
-    else
-      strict ? raise @error.to_s : @error
-    end.to_s
-  end
-
-  def output : String
-    @output.to_s
-  end
-
-  def error : String
-    @error.to_s
+  # :ditto:
+  def self.new(
+    command : String,
+    args : Array | Tuple | Nil = nil,
+    chdir : String? = nil,
+    output = IO::Memory.new,
+    error = IO::Memory.new,
+    **process_args,
+    &block : Process -> _
+  ) : Tuple
+    process = Process.new **process_args.merge(command: command, args: args, chdir: chdir, output: output, error: error)
+    yield process
+    {output, error}
   end
 end
