@@ -1,8 +1,8 @@
 module Exec
   # Yields a `Process::Status` and returns a Tuple with the stdout and stderr.
   def self.run(cmd : String, **process_args, &block : Process -> _) : Tuple
-    args = cmd.split(' ', limit: 2)
-    run(**process_args.merge(cmd: args[0], args: args[1]?.to_s)) { |process| yield process }
+    args = cmd.partition ' '
+    run(**process_args.merge(cmd: args[0], args: args[2])) { |process| yield process }
   end
 
   # :ditto:
